@@ -1,10 +1,8 @@
 package org.beerfactory.casquette.core
 
-import scodec.codecs._
-
 import scala.annotation.switch
 
-package object packet {
+package object mqtt {
   /*
   implicit class BoolToInt(val b:Boolean) extends AnyVal {
     def toInt = if (b) 1 else 0

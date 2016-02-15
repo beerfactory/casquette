@@ -1,5 +1,6 @@
-package org.beerfactory.casquette.core.packet
+package org.beerfactory.casquette.core.mqtt.packets
 
+import org.beerfactory.casquette.core.mqtt.QualityOfService
 import org.specs2.mutable.Specification
 
 /**

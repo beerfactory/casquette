@@ -1,7 +1,7 @@
-package org.beerfactory.casquette.core.mqtt
+package org.beerfactory.casquette.core.mqtt.codecs
 
-import org.beerfactory.casquette.core.packet.QualityOfService
-import org.beerfactory.casquette.core.packet.QualityOfService.QualityOfService
+import org.beerfactory.casquette.core.mqtt.QualityOfService
+import org.beerfactory.casquette.core.mqtt.QualityOfService.QualityOfService
 import scodec.Attempt._
 import scodec._
 import scodec.bits._

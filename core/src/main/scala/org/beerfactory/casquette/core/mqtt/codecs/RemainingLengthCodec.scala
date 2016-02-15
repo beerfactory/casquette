@@ -1,4 +1,4 @@
-package org.beerfactory.casquette.core.mqtt
+package org.beerfactory.casquette.core.mqtt.codecs
 
 import scodec.Attempt._
 import scodec._

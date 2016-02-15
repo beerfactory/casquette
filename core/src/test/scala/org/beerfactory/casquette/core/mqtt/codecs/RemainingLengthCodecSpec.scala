@@ -1,7 +1,7 @@
-package org.beerfactory.casquette.core.mqtt
+package org.beerfactory.casquette.core.mqtt.codecs
 
 import org.beerfactory.casquette.core.SpecUtils._
-import org.beerfactory.casquette.core.mqtt.MQTTCodecs._
+import MQTTCodecs._
 import org.specs2.mutable.Specification
 import scodec.bits._
 import scodec.{DecodeResult, Err}
