@@ -1,10 +1,11 @@
-package org.beerfactory.casquette.core.packet
+package org.beerfactory.casquette.core.mqtt
 
+import org.beerfactory.casquette.core.packet.QualityOfService
 import org.beerfactory.casquette.core.packet.QualityOfService.QualityOfService
 import scodec.Attempt._
 import scodec._
-import scodec.codecs._
 import scodec.bits._
+import scodec.codecs._
 
 
 /**

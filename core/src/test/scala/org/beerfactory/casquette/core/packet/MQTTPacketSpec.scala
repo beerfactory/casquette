@@ -11,7 +11,7 @@ import org.beerfactory.casquette.core.SpecUtils._
   */
 class MQTTPacketSpec extends Specification {
   "A connect packet" should {
-    "be successfully encoded " in {
+    "[0] be successfully encoded/decoded" in {
       val fixedHeader = new ConnectPacketFixedHeader(dupFlag=false, qos=QualityOfService.QOS_0, retain=false)
       val variableHeader = new ConnectPacketVariableHeader(
         userNameFlag=false,
@@ -23,6 +23,27 @@ class MQTTPacketSpec extends Specification {
         keepAlive=0
       )
       val packet = new ConnectPacket(fixedHeader, variableHeader, "", None, None, None, None)
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+    "[1] be successfully encoded/decoded" in {
+      val fixedHeader = new ConnectPacketFixedHeader(dupFlag=false, qos=QualityOfService.QOS_0, retain=false)
+      val variableHeader = new ConnectPacketVariableHeader(
+        userNameFlag=true,
+        passwordFlag=true,
+        willRetainFlag=true,
+        willQos=QualityOfService.QOS_2,
+        willFlag=true,
+        cleanSessionFlag=true,
+        keepAlive=0
+      )
+      val packet = new ConnectPacket(fixedHeader,
+        variableHeader,
+        "someClientId",
+        Some("willTopic"),
+        Some("willMessage"),
+        Some("username"),
+        Some("password"))
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }

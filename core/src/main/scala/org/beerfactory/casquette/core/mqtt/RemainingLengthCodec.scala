@@ -1,8 +1,8 @@
-package org.beerfactory.casquette.core.packet
+package org.beerfactory.casquette.core.mqtt
 
 import scodec.Attempt._
-import scodec.bits.{ByteVector, BitVector}
 import scodec._
+import scodec.bits.{BitVector, ByteVector}
 import scodec.codecs._
 
 /**
