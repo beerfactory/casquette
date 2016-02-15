@@ -1,6 +1,5 @@
 import Dependencies._
 
-resolvers += "Artima Maven Repository" at "http://repo.artima.com/releases"
 scalacOptions in Test ++= Seq("-Yrangepos")
 
 lazy val commonSettings = Seq(
