@@ -12,9 +12,9 @@ object FixedHeader {
   implicit val codec = (bool :: bool :: bool :: bool).as[FixedHeader]
 }
 
-case class ConnectPacketFixedHeader(dupFlag: Boolean, qos: QualityOfService, retain: Boolean) extends  MQTTFixedHeader
+case class PublishPacketFixedHeader(dupFlag: Boolean, qos: QualityOfService, retain: Boolean) extends  MQTTFixedHeader
 
 object ConnectPacketFixedHeader {
-  implicit val codec = (bool :: qosCodec :: bool).as[ConnectPacketFixedHeader]
+  implicit val codec = (bool :: qosCodec :: bool).as[PublishPacketFixedHeader]
 }
 

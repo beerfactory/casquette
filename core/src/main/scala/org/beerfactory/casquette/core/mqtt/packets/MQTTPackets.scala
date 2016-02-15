@@ -14,7 +14,7 @@ sealed trait MQTTPacket {
   def fixedHeader: MQTTFixedHeader
 }
 
-case class ConnectPacket(fixedHeader: ConnectPacketFixedHeader,
+case class ConnectPacket(fixedHeader: FixedHeader,
                          variableHeader: ConnectPacketVariableHeader,
                          clientId: String,
                          willTopic: Option[String],
@@ -23,7 +23,7 @@ case class ConnectPacket(fixedHeader: ConnectPacketFixedHeader,
                          password: Option[String]
                          ) extends MQTTPacket
 case class ConnackPacket(fixedHeader: FixedHeader, sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
-
+case class PublishPacket(fixedHeader: PublishPacketFixedHeader, topic: String, packetIdentifier: Option[Int], payload: ByteVector) extends MQTTPacket
 
 object ConnectPacket {
   implicit val discriminator: Discriminator[MQTTPacket, ConnectPacket, Int] = Discriminator(1)
