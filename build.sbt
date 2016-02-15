@@ -20,5 +20,5 @@ lazy val core = (project in file("core")).
   settings(commonSettings: _*).
   settings(
     name := "core",
-    libraryDependencies ++= Seq(akkaActor, scalactic, specs2, scodecCore, scodecBits)
+    libraryDependencies ++= Seq(akkaActor, specs2, scodecCore, scodecBits)
   )
