@@ -13,9 +13,6 @@ import scodec.codecs._
 sealed trait MQTTPacket {
   def fixedHeader: MQTTFixedHeader
 }
-object MQTTPacket {
-  implicit val discriminated: Discriminated[MQTTPacket, Int] = Discriminated(uint4)
-}
 
 case class ConnectPacket(fixedHeader: ConnectPacketFixedHeader,
                          variableHeader: ConnectPacketVariableHeader,
@@ -25,11 +22,11 @@ case class ConnectPacket(fixedHeader: ConnectPacketFixedHeader,
                          userName: Option[String],
                          password: Option[String]
                          ) extends MQTTPacket
-//case class
+case class ConnackPacket(fixedHeader: FixedHeader, sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
 
 
 object ConnectPacket {
-  implicit val disrcriminator: Discriminator[MQTTPacket, ConnectPacket, Int] = Discriminator(1)
+  implicit val discriminator: Discriminator[MQTTPacket, ConnectPacket, Int] = Discriminator(1)
   implicit val codec: Codec[ConnectPacket] = (ConnectPacketFixedHeader.codec ::
     variableSizeBytes(remainingLengthCodec,
       ConnectPacketVariableHeader.codec >>:~ { (header: ConnectPacketVariableHeader) ⇒
@@ -39,4 +36,19 @@ object ConnectPacket {
           conditional(header.userNameFlag, stringCodec) ::
           conditional(header.passwordFlag, stringCodec)
       })).as[ConnectPacket]
+}
+
+object ConnackPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, ConnackPacket, Int] = Discriminator(2)
+  implicit val codec : Codec[ConnackPacket] = (FixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec,
+      ignore(7) ::
+        bool ::
+        byte)
+  ).dropUnits.as[ConnackPacket]
+}
+
+object MQTTPacket {
+  implicit val discriminated: Discriminated[MQTTPacket, Int] = Discriminated(uint4)
+  implicit val codec = Codec.coproduct[MQTTPacket].discriminatedBy(uint4).auto
 }
