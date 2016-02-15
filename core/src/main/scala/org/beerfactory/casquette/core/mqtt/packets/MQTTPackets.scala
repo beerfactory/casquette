@@ -48,6 +48,8 @@ object ConnackPacket {
   ).dropUnits.as[ConnackPacket]
 }
 
+//Companion object moved to bottom of file according to :
+// http://stackoverflow.com/questions/30835502/scodec-coproducts-could-not-find-implicit-value-for-parameter-auto-scodec-code
 object MQTTPacket {
   implicit val discriminated: Discriminated[MQTTPacket, Int] = Discriminated(uint4)
   implicit val codec = Codec.coproduct[MQTTPacket].discriminatedBy(uint4).auto
