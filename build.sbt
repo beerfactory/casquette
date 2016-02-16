@@ -21,3 +21,10 @@ lazy val core = (project in file("core")).
     name := "core",
     libraryDependencies ++= Seq(akkaActor, specs2, scodecCore, scodecBits)
   )
+
+lazy val client = (project in file("client")).
+  settings(commonSettings: _*).
+  settings(
+    name := "client",
+    libraryDependencies ++= Seq(akkaActor, specs2, logbackClassic, typesafeConfig, typesafeLogging)
+  )
