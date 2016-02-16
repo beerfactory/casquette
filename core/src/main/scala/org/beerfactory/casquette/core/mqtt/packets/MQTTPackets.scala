@@ -27,6 +27,11 @@ case class PubrelPacket(packetIdentifier: Short) extends MQTTPacket
 case class PubcompPacket(packetIdentifier: Short) extends MQTTPacket
 case class SubscribePacket(packetIdentifier: Short, topics: Vector[(String, QualityOfService)]) extends MQTTPacket
 case class SubackPacket(packetIdentifier: Short, returnCodes: Vector[Byte]) extends MQTTPacket
+case class UnsubscribePacket(packetIdentifier: Short, topics: Vector[String]) extends MQTTPacket
+case class UnsubackPacket(packetIdentifier: Short) extends MQTTPacket
+case class PingreqPacket() extends MQTTPacket
+case class PingrespPacket() extends MQTTPacket
+case class DisconnectPacket() extends MQTTPacket
 
 object ConnectPacket {
   implicit val discriminator: Discriminator[MQTTPacket, ConnectPacket, Byte] = Discriminator(1)
@@ -101,6 +106,37 @@ object SubackPacket {
   val returnCodesCodec: Codec[Vector[Byte]] = vector(byte)
   implicit val codec: Codec[SubackPacket] = (DefaultFixedHeader.codec ::
     variableSizeBytes(remainingLengthCodec, packetIdCodec :: returnCodesCodec)).as[SubackPacket]
+}
+
+object UnsubscribePacket {
+  implicit val discriminator: Discriminator[MQTTPacket, UnsubscribePacket, Byte] = Discriminator(10)
+  val topicsCodec: Codec[Vector[String]] = vector(stringCodec)
+  implicit val codec: Codec[UnsubscribePacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec :: topicsCodec)).as[UnsubscribePacket]
+}
+
+object UnsubackPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, UnsubackPacket, Byte] = Discriminator(11)
+  implicit val codec: Codec[UnsubackPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[UnsubackPacket]
+}
+
+object PingreqPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PingreqPacket, Byte] = Discriminator(12)
+  implicit val codec: Codec[PingreqPacket] =(DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, ignore(0))).dropUnits.as[PingreqPacket]
+}
+
+object PingrespPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PingrespPacket, Byte] = Discriminator(13)
+  implicit val codec: Codec[PingrespPacket] =(DefaultFixedHeader.codec ::
+      variableSizeBytes(remainingLengthCodec, ignore(0))).dropUnits.as[PingrespPacket]
+}
+
+object DisconnectPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, DisconnectPacket, Byte] = Discriminator(14)
+  implicit val codec: Codec[DisconnectPacket] =(DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, ignore(0))).dropUnits.as[DisconnectPacket]
 }
 
 //Companion object moved to bottom of file according to :

@@ -118,4 +118,44 @@ class MQTTPacketSpec extends Specification {
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
   }
+
+  "A SUBSCRIBE packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new UnsubscribePacket(1, Vector("a/b", "c/d", "e/f"))
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
+
+  "A UNSUBACK packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new UnsubackPacket(1)
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
+
+  "A PINGREQ packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new PingreqPacket()
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
+
+  "A PINGRESP packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new PingrespPacket()
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
+
+  "A DISCONNECT packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new DisconnectPacket()
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
 }
