@@ -48,12 +48,12 @@ class MQTTPacketSpec extends Specification {
   }
   "A CONNACK packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new ConnackPacket(false, 0)
+      val packet = new ConnAckPacket(false, 0)
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
     "[1] be successfully encoded/decoded" in {
-      val packet = new ConnackPacket(true, 2)
+      val packet = new ConnAckPacket(true, 2)
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }

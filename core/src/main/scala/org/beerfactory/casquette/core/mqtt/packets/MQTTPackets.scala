@@ -19,7 +19,7 @@ case class ConnectPacket(variableHeader: ConnectPacketVariableHeader,
                          userName: Option[String],
                          password: Option[String]
                          ) extends MQTTPacket
-case class ConnackPacket(sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
+case class ConnAckPacket(sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
 case class PublishPacket(fixedHeader: PublishPacketFixedHeader, topic: String, packetIdentifier: Option[Short], payload: ByteVector) extends MQTTPacket
 case class PubAckPacket(packetIdentifier: Short) extends MQTTPacket
 case class PubRecPacket(packetIdentifier: Short) extends MQTTPacket
@@ -46,14 +46,14 @@ object ConnectPacket {
       })).as[ConnectPacket]
 }
 
-object ConnackPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, ConnackPacket, Byte] = Discriminator(2)
-  implicit val codec: Codec[ConnackPacket] = (DefaultFixedHeader.codec ::
+object ConnAckPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, ConnAckPacket, Byte] = Discriminator(2)
+  implicit val codec: Codec[ConnAckPacket] = (DefaultFixedHeader.codec ::
     variableSizeBytes(remainingLengthCodec,
       ignore(7) ::
         bool ::
         byte)
-  ).dropUnits.as[ConnackPacket]
+  ).dropUnits.as[ConnAckPacket]
 }
 
 object PublishPacket {
