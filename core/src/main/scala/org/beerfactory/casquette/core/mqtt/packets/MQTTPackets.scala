@@ -10,24 +10,21 @@ import scodec.codecs._
   * Created by nico on 07/02/2016.
   */
 
-sealed trait MQTTPacket {
-  def fixedHeader: MQTTFixedHeader
-}
+sealed trait MQTTPacket
 
-case class ConnectPacket(fixedHeader: FixedHeader,
-                         variableHeader: ConnectPacketVariableHeader,
+case class ConnectPacket(variableHeader: ConnectPacketVariableHeader,
                          clientId: String,
                          willTopic: Option[String],
                          willMessage: Option[String],
                          userName: Option[String],
                          password: Option[String]
                          ) extends MQTTPacket
-case class ConnackPacket(fixedHeader: FixedHeader, sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
+case class ConnackPacket(sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
 case class PublishPacket(fixedHeader: PublishPacketFixedHeader, topic: String, packetIdentifier: Option[Int], payload: ByteVector) extends MQTTPacket
 
 object ConnectPacket {
   implicit val discriminator: Discriminator[MQTTPacket, ConnectPacket, Int] = Discriminator(1)
-  implicit val codec: Codec[ConnectPacket] = (ConnectPacketFixedHeader.codec ::
+  implicit val codec: Codec[ConnectPacket] = (DefaultFixedHeader.codec ::
     variableSizeBytes(remainingLengthCodec,
       ConnectPacketVariableHeader.codec >>:~ { (header: ConnectPacketVariableHeader) ⇒
         stringCodec ::
@@ -40,12 +37,24 @@ object ConnectPacket {
 
 object ConnackPacket {
   implicit val discriminator: Discriminator[MQTTPacket, ConnackPacket, Int] = Discriminator(2)
-  implicit val codec : Codec[ConnackPacket] = (FixedHeader.codec ::
+  implicit val codec: Codec[ConnackPacket] = (DefaultFixedHeader.codec ::
     variableSizeBytes(remainingLengthCodec,
       ignore(7) ::
         bool ::
         byte)
   ).dropUnits.as[ConnackPacket]
+}
+
+object PublishPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PublishPacket, Int] = Discriminator(3)
+  implicit val codec: Codec[PublishPacket] = (PublishPacketFixedHeader.codec >>:~ {
+    (header: PublishPacketFixedHeader) ⇒
+      variableSizeBytes(remainingLengthCodec,
+        stringCodec ::
+        conditional(header.qos != QOS_0, packetIdCodec) ::
+        bytes
+      )}
+    ).as[PublishPacket]
 }
 
 //Companion object moved to bottom of file according to :
