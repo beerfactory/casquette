@@ -73,7 +73,7 @@ class MQTTPacketSpec extends Specification {
 
   "A PUBACK packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new PubackPacket(1)
+      val packet = new PubAckPacket(1)
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -81,7 +81,7 @@ class MQTTPacketSpec extends Specification {
 
   "A PUBREC packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new PubrecPacket(1)
+      val packet = new PubRecPacket(1)
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -89,7 +89,7 @@ class MQTTPacketSpec extends Specification {
 
   "A PUBREL packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new PubrelPacket(1)
+      val packet = new PubRelPacket(1)
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -97,7 +97,7 @@ class MQTTPacketSpec extends Specification {
 
   "A PUBCOMP packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new PubcompPacket(1)
+      val packet = new PubCompPacket(1)
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -113,7 +113,7 @@ class MQTTPacketSpec extends Specification {
 
   "A SUBACK packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new SubackPacket(1, Vector(0x00.toByte, 0x01.toByte, 0x02.toByte, 0x80.toByte))
+      val packet = new SubAckPacket(1, Vector(0x00.toByte, 0x01.toByte, 0x02.toByte, 0x80.toByte))
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -121,7 +121,7 @@ class MQTTPacketSpec extends Specification {
 
   "A SUBSCRIBE packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new UnsubscribePacket(1, Vector("a/b", "c/d", "e/f"))
+      val packet = new UnSubscribePacket(1, Vector("a/b", "c/d", "e/f"))
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -129,7 +129,7 @@ class MQTTPacketSpec extends Specification {
 
   "A UNSUBACK packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new UnsubackPacket(1)
+      val packet = new UnSubAckPacket(1)
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -137,7 +137,7 @@ class MQTTPacketSpec extends Specification {
 
   "A PINGREQ packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new PingreqPacket()
+      val packet = new PingReqPacket()
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
@@ -145,7 +145,7 @@ class MQTTPacketSpec extends Specification {
 
   "A PINGRESP packet" should {
     "[0] be successfully encoded/decoded" in {
-      val packet = new PingrespPacket()
+      val packet = new PingRespPacket()
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }

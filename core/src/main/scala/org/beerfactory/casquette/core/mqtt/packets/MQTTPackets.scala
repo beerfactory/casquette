@@ -21,16 +21,16 @@ case class ConnectPacket(variableHeader: ConnectPacketVariableHeader,
                          ) extends MQTTPacket
 case class ConnackPacket(sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
 case class PublishPacket(fixedHeader: PublishPacketFixedHeader, topic: String, packetIdentifier: Option[Short], payload: ByteVector) extends MQTTPacket
-case class PubackPacket(packetIdentifier: Short) extends MQTTPacket
-case class PubrecPacket(packetIdentifier: Short) extends MQTTPacket
-case class PubrelPacket(packetIdentifier: Short) extends MQTTPacket
-case class PubcompPacket(packetIdentifier: Short) extends MQTTPacket
+case class PubAckPacket(packetIdentifier: Short) extends MQTTPacket
+case class PubRecPacket(packetIdentifier: Short) extends MQTTPacket
+case class PubRelPacket(packetIdentifier: Short) extends MQTTPacket
+case class PubCompPacket(packetIdentifier: Short) extends MQTTPacket
 case class SubscribePacket(packetIdentifier: Short, topics: Vector[(String, QualityOfService)]) extends MQTTPacket
-case class SubackPacket(packetIdentifier: Short, returnCodes: Vector[Byte]) extends MQTTPacket
-case class UnsubscribePacket(packetIdentifier: Short, topics: Vector[String]) extends MQTTPacket
-case class UnsubackPacket(packetIdentifier: Short) extends MQTTPacket
-case class PingreqPacket() extends MQTTPacket
-case class PingrespPacket() extends MQTTPacket
+case class SubAckPacket(packetIdentifier: Short, returnCodes: Vector[Byte]) extends MQTTPacket
+case class UnSubscribePacket(packetIdentifier: Short, topics: Vector[String]) extends MQTTPacket
+case class UnSubAckPacket(packetIdentifier: Short) extends MQTTPacket
+case class PingReqPacket() extends MQTTPacket
+case class PingRespPacket() extends MQTTPacket
 case class DisconnectPacket() extends MQTTPacket
 
 object ConnectPacket {
@@ -68,29 +68,29 @@ object PublishPacket {
     ).as[PublishPacket]
 }
 
-object PubackPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, PubackPacket, Byte] = Discriminator(4)
-  implicit val codec: Codec[PubackPacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubackPacket]
+object PubAckPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubAckPacket, Byte] = Discriminator(4)
+  implicit val codec: Codec[PubAckPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubAckPacket]
 }
 
-object PubrecPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, PubrecPacket, Byte] = Discriminator(5)
-  implicit val codec: Codec[PubrecPacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubrecPacket]
+object PubRecPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubRecPacket, Byte] = Discriminator(5)
+  implicit val codec: Codec[PubRecPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubRecPacket]
 }
 
-object PubrelPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, PubrelPacket, Byte] = Discriminator(6)
-  implicit val codec: Codec[PubrelPacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubrelPacket]
+object PubRelPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubRelPacket, Byte] = Discriminator(6)
+  implicit val codec: Codec[PubRelPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubRelPacket]
 
 }
 
-object PubcompPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, PubcompPacket, Byte] = Discriminator(7)
-  implicit val codec: Codec[PubcompPacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubcompPacket]
+object PubCompPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubCompPacket, Byte] = Discriminator(7)
+  implicit val codec: Codec[PubCompPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubCompPacket]
 }
 
 object SubscribePacket {
@@ -101,36 +101,36 @@ object SubscribePacket {
     variableSizeBytes(remainingLengthCodec, packetIdCodec :: topicsCodec)).as[SubscribePacket]
 }
 
-object SubackPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, SubackPacket, Byte] = Discriminator(9)
+object SubAckPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, SubAckPacket, Byte] = Discriminator(9)
   val returnCodesCodec: Codec[Vector[Byte]] = vector(byte)
-  implicit val codec: Codec[SubackPacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec :: returnCodesCodec)).as[SubackPacket]
+  implicit val codec: Codec[SubAckPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec :: returnCodesCodec)).as[SubAckPacket]
 }
 
-object UnsubscribePacket {
-  implicit val discriminator: Discriminator[MQTTPacket, UnsubscribePacket, Byte] = Discriminator(10)
+object UnSubscribePacket {
+  implicit val discriminator: Discriminator[MQTTPacket, UnSubscribePacket, Byte] = Discriminator(10)
   val topicsCodec: Codec[Vector[String]] = vector(stringCodec)
-  implicit val codec: Codec[UnsubscribePacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec :: topicsCodec)).as[UnsubscribePacket]
+  implicit val codec: Codec[UnSubscribePacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec :: topicsCodec)).as[UnSubscribePacket]
 }
 
-object UnsubackPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, UnsubackPacket, Byte] = Discriminator(11)
-  implicit val codec: Codec[UnsubackPacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[UnsubackPacket]
+object UnSubAckPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, UnSubAckPacket, Byte] = Discriminator(11)
+  implicit val codec: Codec[UnSubAckPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[UnSubAckPacket]
 }
 
-object PingreqPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, PingreqPacket, Byte] = Discriminator(12)
-  implicit val codec: Codec[PingreqPacket] =(DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, ignore(0))).dropUnits.as[PingreqPacket]
+object PingReqPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PingReqPacket, Byte] = Discriminator(12)
+  implicit val codec: Codec[PingReqPacket] =(DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, ignore(0))).dropUnits.as[PingReqPacket]
 }
 
-object PingrespPacket {
-  implicit val discriminator: Discriminator[MQTTPacket, PingrespPacket, Byte] = Discriminator(13)
-  implicit val codec: Codec[PingrespPacket] =(DefaultFixedHeader.codec ::
-      variableSizeBytes(remainingLengthCodec, ignore(0))).dropUnits.as[PingrespPacket]
+object PingRespPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PingRespPacket, Byte] = Discriminator(13)
+  implicit val codec: Codec[PingRespPacket] =(DefaultFixedHeader.codec ::
+      variableSizeBytes(remainingLengthCodec, ignore(0))).dropUnits.as[PingRespPacket]
 }
 
 object DisconnectPacket {
