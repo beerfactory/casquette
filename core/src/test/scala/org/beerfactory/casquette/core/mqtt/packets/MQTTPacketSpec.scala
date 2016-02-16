@@ -78,4 +78,28 @@ class MQTTPacketSpec extends Specification {
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
   }
+
+  "A PUBREC packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new PubrecPacket(1)
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
+
+  "A PUBREL packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new PubrelPacket(1)
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
+
+  "A PUBCOMP packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new PubcompPacket(1)
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
 }

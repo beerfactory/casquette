@@ -22,6 +22,9 @@ case class ConnectPacket(variableHeader: ConnectPacketVariableHeader,
 case class ConnackPacket(sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
 case class PublishPacket(fixedHeader: PublishPacketFixedHeader, topic: String, packetIdentifier: Option[Int], payload: ByteVector) extends MQTTPacket
 case class PubackPacket(packetIdentifier: Int) extends MQTTPacket
+case class PubrecPacket(packetIdentifier: Int) extends MQTTPacket
+case class PubrelPacket(packetIdentifier: Int) extends MQTTPacket
+case class PubcompPacket(packetIdentifier: Int) extends MQTTPacket
 
 object ConnectPacket {
   implicit val discriminator: Discriminator[MQTTPacket, ConnectPacket, Int] = Discriminator(1)
@@ -61,9 +64,26 @@ object PublishPacket {
 object PubackPacket {
   implicit val discriminator: Discriminator[MQTTPacket, PubackPacket, Int] = Discriminator(4)
   implicit val codec: Codec[PubackPacket] = (DefaultFixedHeader.codec ::
-    variableSizeBytes(remainingLengthCodec, packetIdCodec)
-    ).as[PubackPacket]
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubackPacket]
+}
 
+object PubrecPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubrecPacket, Int] = Discriminator(5)
+  implicit val codec: Codec[PubrecPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubrecPacket]
+}
+
+object PubrelPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubrelPacket, Int] = Discriminator(6)
+  implicit val codec: Codec[PubrelPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubrelPacket]
+
+}
+
+object PubcompPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubcompPacket, Int] = Discriminator(7)
+  implicit val codec: Codec[PubcompPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)).as[PubcompPacket]
 }
 
 //Companion object moved to bottom of file according to :
