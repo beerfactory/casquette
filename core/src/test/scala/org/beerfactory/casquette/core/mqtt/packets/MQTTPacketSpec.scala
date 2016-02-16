@@ -70,4 +70,12 @@ class MQTTPacketSpec extends Specification {
     val encoded = Codec[MQTTPacket].encode(packet).require
     Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
   }
+
+  "A PUBACK packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new PubackPacket(1)
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
 }

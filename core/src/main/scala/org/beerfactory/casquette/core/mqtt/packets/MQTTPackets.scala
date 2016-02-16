@@ -21,6 +21,7 @@ case class ConnectPacket(variableHeader: ConnectPacketVariableHeader,
                          ) extends MQTTPacket
 case class ConnackPacket(sessionPresentFlag: Boolean, returnCode: Byte) extends MQTTPacket
 case class PublishPacket(fixedHeader: PublishPacketFixedHeader, topic: String, packetIdentifier: Option[Int], payload: ByteVector) extends MQTTPacket
+case class PubackPacket(packetIdentifier: Int) extends MQTTPacket
 
 object ConnectPacket {
   implicit val discriminator: Discriminator[MQTTPacket, ConnectPacket, Int] = Discriminator(1)
@@ -55,6 +56,14 @@ object PublishPacket {
         bytes
       )}
     ).as[PublishPacket]
+}
+
+object PubackPacket {
+  implicit val discriminator: Discriminator[MQTTPacket, PubackPacket, Int] = Discriminator(4)
+  implicit val codec: Codec[PubackPacket] = (DefaultFixedHeader.codec ::
+    variableSizeBytes(remainingLengthCodec, packetIdCodec)
+    ).as[PubackPacket]
+
 }
 
 //Companion object moved to bottom of file according to :
