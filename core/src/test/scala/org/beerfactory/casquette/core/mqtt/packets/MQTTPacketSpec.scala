@@ -102,4 +102,20 @@ class MQTTPacketSpec extends Specification {
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
   }
+
+  "A SUBSCRIBE packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new SubscribePacket(1, Vector(("a/b", QualityOfService.QOS_0), ("c/d", QualityOfService.QOS_1), ("e/f", QualityOfService.QOS_2)))
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
+
+  "A SUBACK packet" should {
+    "[0] be successfully encoded/decoded" in {
+      val packet = new SubackPacket(1, Vector(0x00.toByte, 0x01.toByte, 0x02.toByte, 0x80.toByte))
+      val encoded = Codec[MQTTPacket].encode(packet).require
+      Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
+  }
 }

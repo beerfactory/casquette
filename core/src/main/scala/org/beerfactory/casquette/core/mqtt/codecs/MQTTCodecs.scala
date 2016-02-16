@@ -6,5 +6,5 @@ object MQTTCodecs {
   val remainingLengthCodec = new RemainingLengthCodec
   val stringCodec = variableSizeBytes(uint16, utf8)
   val qosCodec = new QualityOfServiceCodec
-  val packetIdCodec = uint16
+  val packetIdCodec = short16
 }
