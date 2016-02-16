@@ -12,11 +12,11 @@ package object mqtt {
 
   object QualityOfService extends Enumeration {
     type QualityOfService = Value
-    val QOS_0 = Value(0)
-    val QOS_1 = Value(1)
-    val QOS_2 = Value(2)
+    val QOS_0 = Value(0.toByte)
+    val QOS_1 = Value(1.toByte)
+    val QOS_2 = Value(2.toByte)
 
-    def fromInt(qos: Int): QualityOfService =
+    def fromInt(qos: Byte): QualityOfService =
       (qos: @switch) match {
         case 0 ⇒ QOS_0
         case 1 ⇒ QOS_1

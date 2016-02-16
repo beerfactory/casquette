@@ -24,7 +24,7 @@ class QualityOfServiceCodec extends Codec[QualityOfService] {
   }
 
   override def decode(bits: BitVector): Attempt[DecodeResult[QualityOfService]] = {
-    uint2.decode(bits) match {
+    ubyte(2).decode(bits) match {
       case f:Failure => f
       case Successful(r) =>
         try {
