@@ -45,7 +45,29 @@ class MQTTPacketSpec extends Specification {
       val encoded = Codec[MQTTPacket].encode(packet).require
       Codec[MQTTPacket].decode(encoded) must succeedWith(DecodeResult(packet, BitVector.empty))
     }
+    "[2] be successfully decoded from stream" in {
+      val encoded = hex"103e0004" ++ ByteVector("MQTT".getBytes()) ++ hex"04ce0000000a" ++ ByteVector("0123456789".getBytes()) ++
+        hex"0009" ++ ByteVector("WillTopic".getBytes()) ++ hex"000b" ++ ByteVector("WillMessage".getBytes()) ++ hex"0004" ++ ByteVector("user".getBytes()) ++
+        hex"0008" ++ ByteVector("password".getBytes)
+      val variableHeader = new ConnectPacketVariableHeader(
+        userNameFlag=true,
+        passwordFlag=true,
+        willRetainFlag=false,
+        willQos=QualityOfService.QOS_1,
+        willFlag=true,
+        cleanSessionFlag=true,
+        keepAlive=0
+      )
+      val packet = new ConnectPacket(variableHeader,
+        "0123456789",
+        Some("WillTopic"),
+        Some("WillMessage"),
+        Some("user"),
+        Some("password"))
+      Codec[MQTTPacket].decode(encoded.bits) must succeedWith(DecodeResult(packet, BitVector.empty))
+    }
   }
+
   "A CONNACK packet" should {
     "[0] be successfully encoded/decoded" in {
       val packet = new ConnAckPacket(false, 0)
