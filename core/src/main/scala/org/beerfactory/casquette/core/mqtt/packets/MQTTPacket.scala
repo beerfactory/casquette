@@ -143,5 +143,5 @@ object DisconnectPacket {
 // http://stackoverflow.com/questions/30835502/scodec-coproducts-could-not-find-implicit-value-for-parameter-auto-scodec-code
 object MQTTPacket {
   implicit val discriminated: Discriminated[MQTTPacket, Byte] = Discriminated(ubyte(4))
-  implicit val codec = Codec.coproduct[MQTTPacket].discriminatedBy(ubyte(4)).auto
+  implicit val codec = Codec.coproduct[MQTTPacket].discriminatedBy(ubyte(4))
 }
