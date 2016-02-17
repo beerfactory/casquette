@@ -8,7 +8,9 @@ object Dependencies {
   val typesafeConfig  = "com.typesafe" % "config" % "1.3.0"
   val typesafeLogging = "com.typesafe.scala-logging" %% "scala-logging" % "3.1.0"
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.1.5"
+
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
+  val akkaStream = "com.typesafe.akka" % "akka-stream-experimental_2.11" % "2.0.3"
 
   val specs2      = "org.specs2"    %% "specs2-core"  % "3.7.1"
 
