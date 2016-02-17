@@ -21,9 +21,9 @@ object CasquetteMain extends App {
       .withFallback(internalConfig)
   }
 
-  val system = ActorSystem("casquette-client", config)
+  val client = new MQTTClient(Some(config))
   logger.debug("System started")
 
-  system.terminate()
+  client.shutdown()
   logger.debug("Stopped")
 }
