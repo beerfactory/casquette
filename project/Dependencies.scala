@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   // Versions
-  val akkaVersion = "2.4.1"
+  val akkaVersion = "2.4.2"
 
 
   val typesafeConfig  = "com.typesafe" % "config" % "1.3.0"
@@ -10,7 +10,7 @@ object Dependencies {
   val logbackClassic = "ch.qos.logback" % "logback-classic" % "1.1.5"
 
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
-  val akkaStream = "com.typesafe.akka" % "akka-stream-experimental_2.11" % "2.0.3"
+  val akkaStream = "com.typesafe.akka" % "akka-stream_2.11" % akkaVersion
 
   val specs2      = "org.specs2"    %% "specs2-core"  % "3.7.1"
 
