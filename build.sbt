@@ -8,6 +8,10 @@ lazy val commonSettings = Seq(
   scalaVersion := "2.11.7"
 )
 
+lazy val commonDeps =
+  compile_dependencies(typesafeLogging, logbackClassic)
+
+
 lazy val root = (project in file(".")).
   aggregate(core).
   settings(commonSettings: _*).
@@ -19,12 +23,16 @@ lazy val core = (project in file("core")).
   settings(commonSettings: _*).
   settings(
     name := "core",
-    libraryDependencies ++= Seq(akkaActor, specs2, scodecCore, scodecBits)
+    libraryDependencies ++= commonDeps ++
+      compile_dependencies(akkaActor, scodecCore, scodecBits) ++
+      test_dependencies(specs2)
   )
 
 lazy val client = (project in file("client")).
   settings(commonSettings: _*).
   settings(
     name := "client",
-    libraryDependencies ++= Seq(akkaActor, specs2, logbackClassic, typesafeConfig, typesafeLogging)
+    libraryDependencies ++= commonDeps ++
+      compile_dependencies(akkaActor, typesafeConfig) ++
+      test_dependencies(specs2)
   )
