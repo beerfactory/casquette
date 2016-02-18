@@ -13,26 +13,27 @@ lazy val commonDeps =
 
 
 lazy val root = (project in file(".")).
-  aggregate(core).
+  aggregate(casquetteMQTT, client).
   settings(commonSettings: _*).
   settings(
     name := "casquette"
   )
 
-lazy val core = (project in file("core")).
+lazy val casquetteMQTT = (project in file("casquette-mqtt")).
   settings(commonSettings: _*).
   settings(
-    name := "core",
+    name := "casquette-mqtt",
     libraryDependencies ++= commonDeps ++
-      compile_dependencies(akkaActor, akkaStream, scodecCore, scodecBits) ++
+      compile_dependencies(scodecCore, scodecBits) ++
       test_dependencies(specs2)
   )
 
 lazy val client = (project in file("client")).
+  dependsOn(casquetteMQTT).
   settings(commonSettings: _*).
   settings(
     name := "client",
     libraryDependencies ++= commonDeps ++
-      compile_dependencies(akkaActor, akkaStream, typesafeConfig) ++
+      compile_dependencies(akkaActor, akkaStream, scodecCore, scodecBits, typesafeConfig) ++
       test_dependencies(specs2)
   )
