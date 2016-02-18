@@ -1,6 +1,6 @@
 package org.beerfactory.casquette.core.mqtt.packets
 
-//import akka.stream.scaladsl.BidiFlow
+import akka.stream.scaladsl.BidiFlow
 import scodec._
 
 

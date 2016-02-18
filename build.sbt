@@ -24,7 +24,7 @@ lazy val core = (project in file("core")).
   settings(
     name := "core",
     libraryDependencies ++= commonDeps ++
-      compile_dependencies(akkaActor, scodecCore, scodecBits) ++
+      compile_dependencies(akkaActor, akkaStream, scodecCore, scodecBits) ++
       test_dependencies(specs2)
   )
 
