@@ -1,5 +1,6 @@
 package org.beerfactory.casquette.core.mqtt.packets
 
+import akka.NotUsed
 import akka.stream.scaladsl.BidiFlow
 import scodec._
 import scodec.bits.BitVector
@@ -12,5 +13,5 @@ object CodecFlow {
 
   def encode(packet: MQTTPacket):BitVector = Codec[MQTTPacket].encode(packet).require
 
-  def codecFlow = BidiFlow.fromFunctions(decode, encode)
+  def codecFlow:BidiFlow[BitVector, MQTTPacket, MQTTPacket, BitVector, NotUsed] = BidiFlow.fromFunctions(decode, encode)
 }
