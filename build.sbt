@@ -35,5 +35,5 @@ lazy val client = (project in file("client")).
     name := "client",
     libraryDependencies ++= commonDeps ++
       compile_dependencies(akkaActor, akkaStream, scodecCore, scodecBits, typesafeConfig) ++
-      test_dependencies(specs2)
+      test_dependencies(specs2, akkaTestKit)
   )

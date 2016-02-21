@@ -8,12 +8,12 @@ import org.beerfactory.casquette.mqtt.MQTTPacket
   * Created by njouanin on 18/02/16.
   */
 object PacketLoggerFlow extends StrictLogging {
-  def log(prefix: String, loggerMethod: (String) => Unit)(packet: MQTTPacket) = {
+  def log(prefix: String, loggerMethod: (String) => Unit)(packet: MQTTPacket):MQTTPacket = {
     loggerMethod(prefix + packet.toString)
     packet
   }
 
-  def loggerFlow(loggerMethod: (String) => Unit): Unit = {
+  def loggerFlow(loggerMethod: (String) => Unit) = {
     BidiFlow.fromFunctions(log("--> ", loggerMethod), log("<-- ", loggerMethod))
   }
 }
