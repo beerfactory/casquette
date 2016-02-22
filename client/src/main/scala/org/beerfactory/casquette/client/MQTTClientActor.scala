@@ -3,6 +3,8 @@ package org.beerfactory.casquette.client
 import akka.actor.{Actor, ActorLogging}
 import akka.event.LoggingReceive
 
+import scala.util.Random
+
 /**
   * Created by nico on 19/02/2016.
   */
