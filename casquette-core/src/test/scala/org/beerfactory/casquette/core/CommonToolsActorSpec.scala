@@ -28,7 +28,7 @@ class CommonToolsActorSpec extends Specification {
     }
     "generate valid client ID" in {
       val base = "casquette"
-      val future = actorRef ? CommonToolsActor.RandomClientID(base)
+      val future = actorRef ? CommonToolsActor.RandomClientID
       val result = Await.result(future, timeout.duration).asInstanceOf[String]
       result must contain(base + "/")
       result.length mustEqual(23)

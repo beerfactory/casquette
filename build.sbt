@@ -38,7 +38,7 @@ lazy val casquetteCore = (project in file("casquette-core")).
   )
 
 lazy val client = (project in file("client")).
-  dependsOn(casquetteMQTT).
+  dependsOn(casquetteMQTT, casquetteCore).
   settings(commonSettings: _*).
   settings(
     name := "client",
