@@ -31,29 +31,32 @@ class MQTTFrameParser extends GraphStage[FlowShape[ByteString, ByteVector]] with
     new GraphStageLogic(shape) {
       setHandler(out, new OutHandler {
         override def onPull(): Unit = {
-          logger.info("onPull()")
-          if (isClosed(in)) run()
-          else pull(in)
+          logger.debug("onPull()")
+          if (isClosed(in))
+            run()
+          else
+            pull(in)
         }
       })
 
       setHandler(in, new InHandler {
         override def onPush(): Unit = {
-          logger.info("onPush()")
+          logger.debug("onPush()")
           val bytes = grab(in)
           buffer = buffer ++ ByteVector.view(bytes.toByteBuffer)
           run()
         }
 
         override def onUpstreamFinish(): Unit = {
-          logger.info(s"onUpstreamFinish(), buffer=$buffer")
+          logger.debug(s"onUpstreamFinish(), buffer=$buffer")
           while (!buffer.isEmpty) {
-            needed = headerCodec.decode(buffer.bits).fold(decodeHeaderFailure, decodeHeaderSuccess)
-            val frame = nextFrame()
-            logger.info(s"emit $frame")
+            // upstream closed, but there are one or more frame to emit
+            val frameLength = headerCodec.decode(buffer.bits).fold(decodeHeaderFailure, decodeHeaderSuccess)
+            val frame = takeNextFrame(frameLength)
+            logger.debug(s"emit $frame")
             emit(out, frame)
           }
-          complete(out)
+          completeStage()
         }
       })
 
@@ -78,11 +81,9 @@ class MQTTFrameParser extends GraphStage[FlowShape[ByteString, ByteVector]] with
         -1
       }
 
-      private def nextFrame():ByteVector = {
-        val emit = headerBytes ++ buffer.take(needed)
-        buffer = buffer.drop(needed)
-        needed = -1
-        headerBytes = ByteVector.empty
+      private def takeNextFrame(frameLength:Int):ByteVector = {
+        val emit = headerBytes ++ buffer.take(frameLength)
+        buffer = buffer.drop(frameLength)
         emit
       }
 
@@ -92,16 +93,19 @@ class MQTTFrameParser extends GraphStage[FlowShape[ByteString, ByteVector]] with
           needed = headerCodec.decode(buffer.bits).fold(decodeHeaderFailure, decodeHeaderSuccess)
         }
         if (buffer.length < needed) {
-          logger.info(s"${buffer.length} bytes in buffer, need $needed to complete MQTT message")
+          logger.debug(s"${buffer.length} bytes in buffer, need $needed to complete MQTT message")
           if (!isClosed(in))
             pull(in)
           else
             failStage(new MQTTFrameParserException("Premature end of upstream"))
         }
-        else {
-          val frame = nextFrame()
+        else
+        {
+          val frame = takeNextFrame(needed)
+          needed = -1
+          headerBytes = ByteVector.empty
           push(out, frame)
-          logger.info(s"push $frame")
+          logger.debug(s"push $frame")
         }
       }
     }
