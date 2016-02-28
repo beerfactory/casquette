@@ -29,12 +29,13 @@ lazy val casquetteMQTT = (project in file("casquette-mqtt")).
   )
 
 lazy val casquetteCore = (project in file("casquette-core")).
+  dependsOn(casquetteMQTT).
   settings(commonSettings: _*).
   settings(
     name := "casquette-core",
     libraryDependencies ++= commonDeps ++
-      compile_dependencies(akkaActor) ++
-      test_dependencies(specs2, akkaTestKit)
+      compile_dependencies(akkaActor, akkaStream, scodecCore, scodecBits) ++
+      test_dependencies(specs2, akkaTestKit, akkaStreamTestKit)
   )
 
 lazy val client = (project in file("client")).

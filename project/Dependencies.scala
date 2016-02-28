@@ -12,7 +12,7 @@ object Dependencies {
   val akkaActor = "com.typesafe.akka" %% "akka-actor" % akkaVersion
   val akkaStream = "com.typesafe.akka" % "akka-stream_2.11" % akkaVersion
   val akkaTestKit = "com.typesafe.akka" % "akka-testkit_2.11" % akkaVersion
-
+  val akkaStreamTestKit = "com.typesafe.akka" % "akka-stream-testkit_2.11" % akkaVersion
   val specs2      = "org.specs2"    %% "specs2-core"  % "3.7.1"
 
   val scodecCore  = "org.scodec"    %% "scodec-core"  % "1.8.3"
