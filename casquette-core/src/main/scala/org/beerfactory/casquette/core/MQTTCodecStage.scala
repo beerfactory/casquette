@@ -74,8 +74,8 @@ class MQTTCodecStage extends GraphStage[BidiShape[ByteString, MQTTPacket, MQTTPa
             case Successful(result) =>
               f(result.value)
               buffer = result.remainder
-            case Failure(cause) => {
-              case cause: InsufficientBits ⇒
+            case Failure(cause) => cause match {
+              case _: InsufficientBits ⇒
                 // Not enough bytes have been read to decode length -> pull more
                 if (isClosed(in1))
                   complete(out1)
