@@ -139,7 +139,7 @@ class MQTTPacketSpec extends Specification {
     }
   }
 
-  "A SUBSCRIBE packet" should {
+  "A UNSUBSCRIBE packet" should {
     "[0] be successfully encoded/decoded" in {
       val packet = new UnSubscribePacket(1, Vector("a/b", "c/d", "e/f"))
       val encoded = Codec[MQTTPacket].encode(packet).require
