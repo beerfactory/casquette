@@ -7,7 +7,7 @@ import akka.util.ByteString
 import com.typesafe.scalalogging.LazyLogging
 import org.beerfactory.casquette.mqtt.MQTTPacket
 import scodec.Attempt.{Failure, Successful}
-import scodec.Codec
+import scodec.{Err, Codec}
 import scodec.Err.InsufficientBits
 import scodec.bits.BitVector
 
@@ -15,6 +15,8 @@ import scodec.bits.BitVector
   * Created by njouanin on 29/02/16.
   */
 object MQTTCodecStage {
+  class MQTTDecodeStageException(msg: String, error: Option[Err]) extends Exception(msg)
+
   class MQTTDecodeStage extends GraphStage[FlowShape[ByteString, MQTTPacket]] with LazyLogging {
     val in = Inlet[ByteString]("MQTTDecodeStage.in")
     val out = Outlet[MQTTPacket]("MQTTDecodeStage.out")
@@ -60,7 +62,7 @@ object MQTTCodecStage {
                     complete(out)
                   else
                     pull(in)
-                case _ ⇒ failStage(new MQTTFrameParserException("Failed to decoded incoming data frame", Some(cause)))
+                case _ ⇒ failStage(new MQTTDecodeStageException("Failed to decoded incoming data frame", Some(cause)))
               }
             }
           }
