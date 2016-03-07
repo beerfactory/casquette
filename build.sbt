@@ -13,7 +13,7 @@ lazy val commonDeps =
 
 
 lazy val root = (project in file(".")).
-  aggregate(casquetteMQTT, client).
+  aggregate(casquetteMQTT, casquetteCore, client).
   settings(commonSettings: _*).
   settings(
     name := "casquette"
