@@ -1,6 +1,6 @@
 package org.beerfactory.casquette.core.stats
 
-import akka.stream.Graph
+import akka.stream.{Outlet, FanOutShape, FanOutShape2, Graph}
 import akka.stream.scaladsl.{Broadcast, GraphDSL}
 import akka.util.ByteString
 
@@ -16,7 +16,8 @@ object StatFlow {
       import GraphDSL.Implicits._
 
       val broadcast = b.add(Broadcast[ByteString](2))
-      StatShape(broadcast.in, broadcast.out(0), broadcast.out(1))
+      val statOut = Outlet[Stat]("StatFlow.out")
+      new StateShape(broadcast.in, broadcast.out(0), statOut)
     }
   }
 }
