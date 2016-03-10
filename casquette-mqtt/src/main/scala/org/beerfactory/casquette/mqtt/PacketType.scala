@@ -46,7 +46,7 @@ object PacketType extends Enumeration {
     }
 
   def fromPacket(packet: MQTTPacket): PacketType =
-    (packet: @switch) match {
+    packet match {
       case _:ConnectPacket ⇒ CONNECT
       case _:ConnAckPacket ⇒ CONNACK
       case _:PublishPacket ⇒ PUBLISH
