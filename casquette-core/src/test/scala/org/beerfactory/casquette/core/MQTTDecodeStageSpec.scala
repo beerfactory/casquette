@@ -6,7 +6,6 @@ import akka.stream.scaladsl.{Flow, Source}
 import akka.stream.testkit.scaladsl.TestSink
 import akka.util.ByteString
 import com.typesafe.config.ConfigFactory
-import org.beerfactory.casquette.core.MQTTCodecStage.MQTTDecodeStage
 import org.beerfactory.casquette.mqtt.{ConnectPacket, QualityOfService, ConnectPacketVariableHeader, MQTTPacket}
 import org.specs2.mutable.Specification
 import akka.util.Timeout
