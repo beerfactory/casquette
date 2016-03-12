@@ -7,6 +7,7 @@ import akka.stream.testkit.scaladsl.TestSink
 import akka.testkit.{TestProbe, TestActors}
 import akka.util.{Timeout, ByteString}
 import com.typesafe.config.ConfigFactory
+import org.beerfactory.casquette.mqtt.{PacketType, MQTTPacket, PingReqPacket}
 import org.specs2.mutable.Specification
 import scala.concurrent.duration._
 
@@ -29,6 +30,20 @@ class StatFlowSpec extends Specification {
         .expectComplete() must not(throwA[AssertionError])
       probe.expectMsg(BytesInStat(elem.length)) must not(throwA[AssertionError])
       probe.expectMsg(BytesOutStat(elem.length)) must not(throwA[AssertionError])
+    }
+  }
+
+  "Packet through counter" should {
+    "Generate 2 packet stat " in {
+      val probe = TestProbe()
+      val elem = PingReqPacket()
+      val sourceUnderTest = Source.single(elem).via(StatFlow.packetThroughCounterFlow(probe.ref).join(Flow[MQTTPacket].map(x => x)))
+      sourceUnderTest.runWith(TestSink.probe[MQTTPacket])
+        .request(1)
+        .expectNext(elem)
+        .expectComplete() must not(throwA[AssertionError])
+      probe.expectMsg(PacketInStat(PacketType.PINGREQ)) must not(throwA[AssertionError])
+      probe.expectMsg(PacketOutStat(PacketType.PINGREQ)) must not(throwA[AssertionError])
     }
   }
 }
