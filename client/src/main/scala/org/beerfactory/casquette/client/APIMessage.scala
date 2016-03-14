@@ -1,6 +1,6 @@
 package org.beerfactory.casquette.client
 
-import java.net.URL
+import java.net.{URI}
 
 import org.beerfactory.casquette.mqtt.QualityOfService.QualityOfService
 
@@ -9,7 +9,7 @@ sealed trait CommandMessage extends APIMessage
 sealed trait ResponseMessage extends APIMessage
 
 case class Status() extends CommandMessage
-case class Connect(brokerUri: URL,
+case class Connect(brokerUri: URI,
                    clientId:Option[String],
                    cleanSession: Option[Boolean],
                    keepAlive: Option[Int],
