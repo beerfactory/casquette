@@ -20,14 +20,11 @@ class KeepAliveStage(maxIdle: FiniteDuration)
   override def initialAttributes = Attributes.name("KeepAliveStage")
 
   override def shape: BidiShape[MQTTPacket, MQTTPacket, MQTTPacket, MQTTPacket] =
-    BidiShape(incomingIn, incomingOut, outgoingIn, outgoingOut)
+    BidiShape.of(incomingIn, incomingOut, outgoingIn, outgoingOut)
   override def createLogic(inheritedAttributes: Attributes): GraphStageLogic = new TimerGraphStageLogic(shape) {
     private val timerName = "keepAliveTimer"
     private var nextDeadline = Deadline.now + maxIdle
     private var pendingPingRequest = false
-
-    // Prefetching to ensure priority of actual upstream elements
-    override def preStart(): Unit = pull(incomingIn)
 
     setHandler(incomingIn, new InHandler {
       override def onPush(): Unit = {
@@ -36,7 +33,10 @@ class KeepAliveStage(maxIdle: FiniteDuration)
           push(incomingOut, packet) //No Ping request pending for keepalive => forward packet
         else {
           packet match {
-            case _:PingRespPacket => pendingPingRequest = false // Ping response from keep alive, drop element
+            case _:PingRespPacket => {
+              pendingPingRequest = false // Ping response from keep alive, drop element
+              pull(incomingIn) // pull next element
+            }
             case _ => push(incomingOut, packet)
           }
         }
@@ -48,14 +48,17 @@ class KeepAliveStage(maxIdle: FiniteDuration)
     })
 
     setHandler(incomingOut, new OutHandler {
-      override def onPull(): Unit = pull(incomingIn)
+      override def onPull(): Unit = {
+        if(!isClosed(incomingIn))
+          pull(incomingIn)
+      }
     })
 
     setHandler(outgoingIn, new InHandler {
       override def onPush(): Unit = {
         nextDeadline = Deadline.now + maxIdle
         cancelTimer(timerName)
-        if (isAvailable(outgoingOut)) {
+        if (isAvailable(outgoingIn)) {
           push(outgoingOut, grab(outgoingIn))
           pull(outgoingIn)
         }
