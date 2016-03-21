@@ -22,7 +22,7 @@ object CasquetteMain extends App {
   }
 
   implicit val system = ActorSystem("casquette-client", config)
-  val client = MQTTClient(system)
+  val client = MQTTClient()
   logger.debug("System started")
 
   system.terminate()

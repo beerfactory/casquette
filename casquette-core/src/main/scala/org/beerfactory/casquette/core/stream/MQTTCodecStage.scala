@@ -1,15 +1,15 @@
-package org.beerfactory.casquette.core
+package org.beerfactory.casquette.core.stream
 
 import akka.stream._
 import akka.stream.scaladsl.BidiFlow
-import akka.stream.stage.{OutHandler, InHandler, GraphStageLogic, GraphStage}
+import akka.stream.stage.{GraphStage, GraphStageLogic, InHandler, OutHandler}
 import akka.util.ByteString
 import com.typesafe.scalalogging.LazyLogging
 import org.beerfactory.casquette.mqtt.MQTTPacket
 import scodec.Attempt.{Failure, Successful}
-import scodec.{Err, Codec}
 import scodec.Err.InsufficientBits
 import scodec.bits.BitVector
+import scodec.{Codec, Err}
 
 /**
   * Created by njouanin on 29/02/16.

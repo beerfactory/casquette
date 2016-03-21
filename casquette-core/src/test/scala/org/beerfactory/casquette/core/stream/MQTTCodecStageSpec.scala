@@ -1,14 +1,15 @@
-package org.beerfactory.casquette.core
+package org.beerfactory.casquette.core.stream
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
-import akka.stream.scaladsl.{BidiFlow, Flow, Source}
+import akka.stream.scaladsl.{Flow, Source}
 import akka.stream.testkit.scaladsl.TestSink
 import akka.util.{ByteString, Timeout}
 import com.typesafe.config.ConfigFactory
 import org.beerfactory.casquette.mqtt._
 import org.specs2.mutable.Specification
 import scodec.bits.ByteVector
+
 import scala.concurrent.duration._
 
 

@@ -1,4 +1,4 @@
-package org.beerfactory.casquette.core.stats
+package org.beerfactory.casquette.core.stream.stats
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer

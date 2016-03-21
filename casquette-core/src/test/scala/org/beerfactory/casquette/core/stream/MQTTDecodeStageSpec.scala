@@ -1,20 +1,16 @@
-package org.beerfactory.casquette.core
+package org.beerfactory.casquette.core.stream
 
 import akka.actor.ActorSystem
 import akka.stream.ActorMaterializer
 import akka.stream.scaladsl.{Flow, Source}
 import akka.stream.testkit.scaladsl.TestSink
-import akka.util.ByteString
+import akka.util.{ByteString, Timeout}
 import com.typesafe.config.ConfigFactory
-import org.beerfactory.casquette.mqtt.{ConnectPacket, QualityOfService, ConnectPacketVariableHeader, MQTTPacket}
+import org.beerfactory.casquette.mqtt.{ConnectPacket, ConnectPacketVariableHeader, MQTTPacket, QualityOfService}
 import org.specs2.mutable.Specification
-import akka.util.Timeout
 import scodec.Codec
-import scala.concurrent.duration._
-import scodec.bits._
 
-import scala.concurrent.Await
-import scala.util.Random
+import scala.concurrent.duration._
 
 /**
   * Created by nico on 28/02/2016.
